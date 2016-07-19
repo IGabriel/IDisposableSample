@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{41B4D03D-FFBC-4AF8-9A3D-9A6B5FA8CE74}</ProjectGuid>
+    <ProjectGuid>{2F8DE13F-BAD3-4C05-A4B7-AC7DE41AEC0B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unmanaged</RootNamespace>
-    <AssemblyName>Unmanaged</AssemblyName>
+    <RootNamespace>Destructor</RootNamespace>
+    <AssemblyName>Destructor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisposableObject.cs" />
+    <Compile Include="DestructorObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
