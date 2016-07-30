@@ -10,52 +10,71 @@ namespace TestConsole
 {
     class Program
     {
-        private static readonly TimeSpan _waitTime = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan _waitShortTime = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan _waitLongTime = new TimeSpan(0, 0, 30);
 
         static void Main(string[] args)
         {
-            //DestructorSimpleWithGC();
-            DestructorSimpleWithoutGC();
+            //DestructorForUnmanagedSimpleWithGC();
+            //DestructorForUnmanagedSimpleWithoutGC();
+
+            DestructorForManagedSimpleWithGC();
 
 
             Console.WriteLine("End of the application");
         }
 
-        #region DestructorSimple
-        private static void DestructorSimpleWithGC()
+        #region Destructor for unmanaged ressource simple
+        private static void DestructorForUnmanagedSimpleWithGC()
         {
-            DestructorSimple();
+            DestructorForUnmanagedSimple();
             GC.Collect();
-            Thread.Sleep(_waitTime);
+            Thread.Sleep(_waitShortTime);
         }
 
-        private static void DestructorSimpleWithoutGC()
+        private static void DestructorForUnmanagedSimpleWithoutGC()
         {
-            DestructorSimple();
-            Thread.Sleep(_waitTime);
+            DestructorForUnmanagedSimple();
+            Thread.Sleep(_waitShortTime);
         }
 
-        private static void DestructorSimple()
+        private static void DestructorForUnmanagedSimple()
         {
-            DestructorObject obj = new DestructorObject();
+            DestructorForUnmanaged obj = new DestructorForUnmanaged();
             obj.ApplyResource();
         }
-        #endregion DestructorSimple
+        #endregion Destructor for unmanaged ressource simple
 
-        //static void Temp()
-        //{
-        //    Console.WriteLine("Creating a big memory stream...");
-        //    using (MemoryStream stream = new MemoryStream())
-        //    {
-        //        const int BlockSize = 1024 * 1024;
-        //        for (int i = 0; i < 1024; i++)
-        //        {
-        //            byte[] buffer = new byte[BlockSize];
-        //            stream.Write(buffer, 0, BlockSize);
-        //            Console.WriteLine("Created block: {0}", i);
-        //        }
-        //    }
-        //    Console.WriteLine("Stream disposed.");
-        //}
+        #region Destructor for managed ressource simple
+        private static void DestructorForManagedSimpleWithGC()
+        {
+            DestructorForManagedSimple();
+            Console.WriteLine("Force garbage collect.");
+            GC.Collect();
+            Thread.Sleep(_waitShortTime);
+
+            //Console.WriteLine("Try to collect the first time...");
+            //Thread.Sleep(_waitShortTime);
+            //GC.Collect();
+
+            //Console.WriteLine("Try to collect the second time...");
+            //Thread.Sleep(_waitShortTime);
+            //GC.Collect();
+
+            //Console.WriteLine("Try to collect the thrid time...");
+            //Thread.Sleep(_waitShortTime);
+            //GC.Collect();
+
+            //Console.WriteLine("Try to collect the fourth time...");
+            //Thread.Sleep(_waitShortTime);
+            //GC.Collect();
+        }
+
+        private static void DestructorForManagedSimple()
+        {
+            DestructorForManaged obj = new DestructorForManaged();
+            obj.ApplyResource();
+        }
+        #endregion Destructor for unmanaged ressource simple
     }
 }

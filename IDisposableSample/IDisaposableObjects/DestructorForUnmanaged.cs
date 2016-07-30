@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace IDisaposableObjects
 {
-    public class DestructorObject : IResourceConsumer
+    public class DestructorForUnmanaged : IResourceConsumer
     {
         private MemoryStream _stream;
 
-        public DestructorObject()
+        public DestructorForUnmanaged()
         {
             _stream = new MemoryStream();
-            Console.WriteLine("Constructor, created memory stream...");
+            Console.WriteLine("Constructor, created memory stream.");
         }
 
-        ~DestructorObject()
+        ~DestructorForUnmanaged()
         {
             _stream.Close();
-            Console.WriteLine("Destructor, released memory stream...");
+            Console.WriteLine("Destructor, released memory stream.");
         }
 
         public void ApplyResource()

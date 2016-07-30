@@ -40,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConstValues.cs" />
-    <Compile Include="DestructorObject.cs" />
+    <Compile Include="DestructorForManaged.cs" />
+    <Compile Include="DestructorForUnmanaged.cs" />
     <Compile Include="HybridPattern.cs" />
     <Compile Include="IDisposablePattern.cs" />
     <Compile Include="IResourceConsumer.cs" />
