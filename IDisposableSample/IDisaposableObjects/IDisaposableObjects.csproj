@@ -43,6 +43,7 @@
     <Compile Include="DestructorForManaged.cs" />
     <Compile Include="DestructorForUnmanaged.cs" />
     <Compile Include="HybridPattern.cs" />
+    <Compile Include="IDisposableForUnmanaged.cs" />
     <Compile Include="IDisposablePattern.cs" />
     <Compile Include="IResourceConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

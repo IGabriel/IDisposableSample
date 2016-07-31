@@ -15,7 +15,7 @@ namespace IDisaposableObjects
 
         ~DestructorForUnmanaged()
         {
-            _stream.Close();
+            _stream.Dispose();
             Console.WriteLine("Destructor, released memory stream.");
         }
 

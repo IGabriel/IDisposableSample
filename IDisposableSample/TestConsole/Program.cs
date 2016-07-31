@@ -18,7 +18,7 @@ namespace TestConsole
             //DestructorForUnmanagedSimpleWithGC();
             //DestructorForUnmanagedSimpleWithoutGC();
 
-            DestructorForManagedSimpleWithGC();
+            //DestructorForManagedSimpleWithGC();
 
 
             Console.WriteLine("End of the application");
@@ -29,6 +29,7 @@ namespace TestConsole
         {
             DestructorForUnmanagedSimple();
             GC.Collect();
+            Console.WriteLine("Garbage collected.");
             Thread.Sleep(_waitShortTime);
         }
 
