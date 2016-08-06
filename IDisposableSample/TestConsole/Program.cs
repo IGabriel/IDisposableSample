@@ -78,6 +78,7 @@ namespace TestConsole
         {
             DisposableResourceHolder obj = new DisposableResourceHolder();
             obj.OpenFile();
+            Console.WriteLine("End of test method.");
         }
         #endregion IDispose samples
 
@@ -90,8 +91,8 @@ namespace TestConsole
             CallGC();
             Wait(tenSeconds);
 
-            //CallGC();
-            //WaitTenSeconds();
+            CallGC();
+            Wait(tenSeconds);
         }
 
         private static void ApplyManagedResource()

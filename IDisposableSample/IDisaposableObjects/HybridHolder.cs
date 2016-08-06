@@ -5,8 +5,7 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    interface IResourceConsumer
+    class HybridHolder
     {
-        void ApplyResource();
     }
 }
