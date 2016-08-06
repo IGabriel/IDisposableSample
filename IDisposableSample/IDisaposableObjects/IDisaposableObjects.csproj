@@ -40,12 +40,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConstValues.cs" />
-    <Compile Include="DestructorForManaged.cs" />
-    <Compile Include="DestructorForUnmanaged.cs" />
+    <Compile Include="ManagedResourceHolder.cs" />
+    <Compile Include="UnmanagedResourceHolder.cs" />
     <Compile Include="FileHolder.cs" />
     <Compile Include="HybridPattern.cs" />
-    <Compile Include="DisposableForUnmanaged.cs" />
+    <Compile Include="DisposableResourceHolder.cs" />
     <Compile Include="IDisposablePattern.cs" />
+    <Compile Include="IResourceConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

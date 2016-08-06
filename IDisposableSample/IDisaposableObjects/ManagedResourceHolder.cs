@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace IDisaposableObjects
 {
-    public class DestructorForManaged
+    public class ManagedResourceHolder : IResourceConsumer
     {
         private static readonly TimeSpan wait = new TimeSpan(0, 0, 20);
         private List<byte[]> _list;
         private Random r;
 
-        public DestructorForManaged()
+        public ManagedResourceHolder()
         {
             _list = new List<byte[]>();
             r = new Random();

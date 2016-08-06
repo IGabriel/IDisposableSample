@@ -22,9 +22,7 @@ namespace TestConsole
             OpenFileWithtUsing();
             OpenFileWithoutUsing();
 
-            DestructorForManagedWithGC();
-
-            //DisposeForUnmanagedWithUsing();
+            ApplyManagedResourceWithGC();
 
 
 
@@ -44,7 +42,7 @@ namespace TestConsole
 
         private static void OpenFile_Destructor()
         {
-            DestructorForUnmanaged obj = new DestructorForUnmanaged();
+            UnmanagedResourceHolder obj = new UnmanagedResourceHolder();
             obj.OpenFile();
             Console.WriteLine("End of test method.");
         }
@@ -57,7 +55,7 @@ namespace TestConsole
             MonitorFileStatus();
             Wait(tenSeconds);
 
-            using (DisposableForUnmanaged obj = new DisposableForUnmanaged())
+            using (DisposableResourceHolder obj = new DisposableResourceHolder())
             {
                 obj.OpenFile();
                 Wait(tenSeconds);
@@ -78,15 +76,15 @@ namespace TestConsole
 
         private static void OpenFile_IDisposable()
         {
-            DisposableForUnmanaged obj = new DisposableForUnmanaged();
+            DisposableResourceHolder obj = new DisposableResourceHolder();
             obj.OpenFile();
         }
         #endregion IDispose samples
 
         #region Pure managed resource sample
-        private static void DestructorForManagedWithGC()
+        private static void ApplyManagedResourceWithGC()
         {
-            DestructorForManaged();
+            ApplyManagedResource();
 
             Wait(tenSeconds);
             CallGC();
@@ -96,9 +94,9 @@ namespace TestConsole
             //WaitTenSeconds();
         }
 
-        private static void DestructorForManaged()
+        private static void ApplyManagedResource()
         {
-            DestructorForManaged obj = new DestructorForManaged();
+            ManagedResourceHolder obj = new ManagedResourceHolder();
             obj.ApplyResource();
             Console.WriteLine("End of test method.");
         }
