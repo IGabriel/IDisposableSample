@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IDisaposableObjects
 {
-    public class DestructorForManaged : IResourceConsumer
+    public class DestructorForManaged
     {
         private static readonly TimeSpan wait = new TimeSpan(0, 0, 20);
         private List<byte[]> _list;

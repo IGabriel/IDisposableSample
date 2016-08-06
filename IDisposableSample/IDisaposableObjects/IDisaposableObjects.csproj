@@ -42,11 +42,16 @@
     <Compile Include="ConstValues.cs" />
     <Compile Include="DestructorForManaged.cs" />
     <Compile Include="DestructorForUnmanaged.cs" />
+    <Compile Include="FileHolder.cs" />
     <Compile Include="HybridPattern.cs" />
-    <Compile Include="IDisposableForUnmanaged.cs" />
+    <Compile Include="DisposableForUnmanaged.cs" />
     <Compile Include="IDisposablePattern.cs" />
-    <Compile Include="IResourceConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFile.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

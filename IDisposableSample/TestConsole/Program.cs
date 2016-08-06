@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Text;
 using IDisaposableObjects;
 
@@ -10,72 +11,127 @@ namespace TestConsole
 {
     class Program
     {
-        private static readonly TimeSpan _waitShortTime = new TimeSpan(0, 0, 10);
-        private static readonly TimeSpan _waitLongTime = new TimeSpan(0, 0, 30);
+        private static readonly TimeSpan oneSeconds = new TimeSpan(0, 0, 1);
+        private static readonly TimeSpan tenSeconds = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan thritySecnods = new TimeSpan(0, 0, 30);
 
         static void Main(string[] args)
         {
-            //DestructorForUnmanagedSimpleWithGC();
-            //DestructorForUnmanagedSimpleWithoutGC();
+            OpenFileWithGC();
 
-            //DestructorForManagedSimpleWithGC();
+            OpenFileWithtUsing();
+            OpenFileWithoutUsing();
+
+            DestructorForManagedWithGC();
+
+            //DisposeForUnmanagedWithUsing();
+
 
 
             Console.WriteLine("End of the application");
         }
 
-        #region Destructor for unmanaged ressource simple
-        private static void DestructorForUnmanagedSimpleWithGC()
+        #region Destructor Sample
+        private static void OpenFileWithGC()
         {
-            DestructorForUnmanagedSimple();
-            GC.Collect();
-            Console.WriteLine("Garbage collected.");
-            Thread.Sleep(_waitShortTime);
+            OpenFile_Destructor();
+            MonitorFileStatus();
+
+            Wait(tenSeconds);
+            CallGC();
+            Wait(tenSeconds);
         }
 
-        private static void DestructorForUnmanagedSimpleWithoutGC()
-        {
-            DestructorForUnmanagedSimple();
-            Thread.Sleep(_waitShortTime);
-        }
-
-        private static void DestructorForUnmanagedSimple()
+        private static void OpenFile_Destructor()
         {
             DestructorForUnmanaged obj = new DestructorForUnmanaged();
-            obj.ApplyResource();
+            obj.OpenFile();
+            Console.WriteLine("End of test method.");
         }
-        #endregion Destructor for unmanaged ressource simple
+        #endregion Destructor Sample
 
-        #region Destructor for managed ressource simple
-        private static void DestructorForManagedSimpleWithGC()
+        #region IDispose samples
+
+        private static void OpenFileWithtUsing()
         {
-            DestructorForManagedSimple();
-            Console.WriteLine("Force garbage collect.");
-            GC.Collect();
-            Thread.Sleep(_waitShortTime);
+            MonitorFileStatus();
+            Wait(tenSeconds);
 
-            //Console.WriteLine("Try to collect the first time...");
-            //Thread.Sleep(_waitShortTime);
-            //GC.Collect();
-
-            //Console.WriteLine("Try to collect the second time...");
-            //Thread.Sleep(_waitShortTime);
-            //GC.Collect();
-
-            //Console.WriteLine("Try to collect the thrid time...");
-            //Thread.Sleep(_waitShortTime);
-            //GC.Collect();
-
-            //Console.WriteLine("Try to collect the fourth time...");
-            //Thread.Sleep(_waitShortTime);
-            //GC.Collect();
+            using (DisposableForUnmanaged obj = new DisposableForUnmanaged())
+            {
+                obj.OpenFile();
+                Wait(tenSeconds);
+                Console.WriteLine("End of using statement.");
+            }
+            Wait(tenSeconds);
         }
 
-        private static void DestructorForManagedSimple()
+        private static void OpenFileWithoutUsing()
+        {
+            MonitorFileStatus();
+            OpenFile_IDisposable();
+
+            Wait(tenSeconds);
+            CallGC();
+            Wait(tenSeconds);
+        }
+
+        private static void OpenFile_IDisposable()
+        {
+            DisposableForUnmanaged obj = new DisposableForUnmanaged();
+            obj.OpenFile();
+        }
+        #endregion IDispose samples
+
+        #region Pure managed resource sample
+        private static void DestructorForManagedWithGC()
+        {
+            DestructorForManaged();
+
+            Wait(tenSeconds);
+            CallGC();
+            Wait(tenSeconds);
+
+            //CallGC();
+            //WaitTenSeconds();
+        }
+
+        private static void DestructorForManaged()
         {
             DestructorForManaged obj = new DestructorForManaged();
             obj.ApplyResource();
+            Console.WriteLine("End of test method.");
         }
-        #endregion Destructor for unmanaged ressource simple
+        #endregion Pure managed resource sample
+
+        #region helper
+        private static void Wait(TimeSpan time)
+        {
+            Console.WriteLine("Wait for {0} seconds...", time.TotalSeconds);
+            Thread.Sleep(time);
+        }
+
+        private static void CallGC()
+        {
+            Console.WriteLine("Call GC.Collect...");
+            GC.Collect();
+        }
+
+        private static void MonitorFileStatus()
+        {
+            Console.WriteLine("Start to monitor file: {0}", FileHolder.TestFileName);
+            Task.Factory.StartNew(() =>
+            {
+                while(true)
+                {
+                    bool isInUse = FileHolder.IsFileInUse(FileHolder.TestFileName);
+
+                    string message = isInUse ? "File is in use." : "File is released.";
+                    Console.WriteLine(message);
+                    Thread.Sleep(oneSeconds);
+                }
+            });
+        }
+        #endregion helper
     }
 }
