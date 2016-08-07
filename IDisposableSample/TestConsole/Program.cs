@@ -12,6 +12,8 @@ namespace TestConsole
     class Program
     {
         private const string TestFileName = @"TestFile.txt";
+        private const string Hybrid1 = @"Hybrid_1.txt";
+        private const string Hybrid2 = @"Hybrid_2.txt";
 
         private static readonly TimeSpan oneSeconds = new TimeSpan(0, 0, 1);
         private static readonly TimeSpan fiveSeconds = new TimeSpan(0, 0, 5);
@@ -142,6 +144,9 @@ namespace TestConsole
                     break;
                 case HolderType.Unmanaged:
                     holder = new UnmanagedFileHolder(TestFileName);
+                    break;
+                case HolderType.Hybrid:
+                    holder = new HybridHolder(Hybrid1, Hybrid2);
                     break;
                 default:
                     break;

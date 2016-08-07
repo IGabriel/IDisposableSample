@@ -40,11 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HolderType.cs" />
+    <Compile Include="HybridHolder.cs" />
     <Compile Include="IFileHolder.cs" />
-    <Compile Include="IManagedFileHolder.cs" />
     <Compile Include="Pattern\HybridPattern.cs" />
     <Compile Include="Pattern\IDisposablePattern.cs" />
     <Compile Include="ManagedFileHolder.cs" />
+    <Compile Include="PInvoke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnmanagedFileHolder.cs" />
   </ItemGroup>

@@ -1,22 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace IDisaposableObjects
 {
-    public class UnmanagedFileHolder : IFileHolder, IDisposable
+    public class HybridHolder : IFileHolder, IDisposable
     {
-        private IntPtr _handle;
-        private string _fileName;
+        private string _unmanagedFile;
+        private string _managedFile;
 
-        public UnmanagedFileHolder(string fileName)
+        private IntPtr _handle;
+        private FileStream _stream;
+
+        public HybridHolder(string unmanagedFile, string managedFile)
         {
-            _fileName = fileName;
+            _unmanagedFile = unmanagedFile;
+            _managedFile = managedFile;
         }
 
         public void OpenFile()
         {
             Console.WriteLine("Open file with windows api.");
             OFSTRUCT info;
-            _handle = WindowsApi.OpenFile(_fileName, out info, OpenFileStyle.OF_READWRITE);
+            _handle = WindowsApi.OpenFile(_unmanagedFile, out info, OpenFileStyle.OF_READWRITE);
+
+            Console.WriteLine("Open file with .Net libray.");
+            _stream = File.Open(_managedFile, FileMode.Append, FileAccess.Write);
         }
 
         #region IDisposable Support
@@ -26,10 +37,11 @@ namespace IDisaposableObjects
         {
             if (!disposed)
             {
-                if (disposing)
+                if (disposing && _stream != null)
                 {
-                    // no managed resource
+                    _stream.Dispose();
                 }
+
                 WindowsApi.CloseHandle(_handle);
                 _handle = IntPtr.Zero;
 
@@ -37,7 +49,7 @@ namespace IDisaposableObjects
             }
         }
 
-        ~UnmanagedFileHolder()
+        ~HybridHolder()
         {
             Dispose(false);
         }
