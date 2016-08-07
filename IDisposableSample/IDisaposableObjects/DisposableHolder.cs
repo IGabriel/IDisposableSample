@@ -2,7 +2,7 @@
 
 namespace IDisaposableObjects
 {
-    public class DisposableHolder : FileHolder, IDisposable
+    public class DisposableHolder : FileHolder, IUnmanagedHolder, IDisposable
     {
         #region IDisposable Support
         private bool disposed = false;

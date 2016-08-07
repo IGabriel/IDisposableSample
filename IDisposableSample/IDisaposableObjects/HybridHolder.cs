@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    public class HybridHolder : IBufferHolder
+    public class HybridHolder : IManagedHolder
     {
         #region IManagedResourceHolder
         private List<byte[]> _list = new List<byte[]>();

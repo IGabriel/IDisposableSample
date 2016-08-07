@@ -5,8 +5,10 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    interface IBufferHolder
+    interface IUnmanagedHolder
     {
-        void ApplyResource();
+        void HoldResource();
+
+        bool IsResourceInUse();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace IDisaposableObjects
 {
-    public class BufferHolder : IBufferHolder
+    public class BufferHolder : IManagedHolder
     {
         internal const int BlockSize = 1024 * 1024;
         internal const int CycleTimes = 1024;

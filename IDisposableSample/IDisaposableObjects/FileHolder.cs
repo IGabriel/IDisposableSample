@@ -7,7 +7,7 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    public abstract class FileHolder : IFileHolder
+    public abstract class FileHolder : IUnmanagedHolder
     {
         public readonly static string TestFileName = @"TestFile.txt";
 
@@ -16,14 +16,13 @@ namespace IDisaposableObjects
             get; protected set;
         }
 
-        public void OpenFile()
+        public void HoldResource()
         {
             StreamInUse = File.Open(TestFileName, FileMode.Append, FileAccess.Write);
             Console.WriteLine("Open file {0} and keep it in use.", TestFileName);
         }
 
-
-        public bool IsFileInUse()
+        public bool IsResourceInUse()
         {
             return IsFileInUse(TestFileName);
         }

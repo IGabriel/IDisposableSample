@@ -5,7 +5,8 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    interface IFileHolder
+    interface IManagedHolder
     {
+        void ApplyResource();
     }
 }

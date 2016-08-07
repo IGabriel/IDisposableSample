@@ -40,9 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HybridHolder.cs" />
-    <Compile Include="IBufferHolder.cs" />
-    <Compile Include="IFileHolder.cs" />
-    <Compile Include="UnmanagedResourceHolder.cs" />
+    <Compile Include="IManagedHolder.cs" />
+    <Compile Include="IUnmanagedHolder.cs" />
+    <Compile Include="NondisposableHolder.cs" />
     <Compile Include="FileHolder.cs" />
     <Compile Include="Pattern\HybridPattern.cs" />
     <Compile Include="DisposableHolder.cs" />

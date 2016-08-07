@@ -3,9 +3,9 @@ using System.IO;
 
 namespace IDisaposableObjects
 {
-    public class UnmanagedResourceHolder : FileHolder
+    public class NondisposableHolder : FileHolder
     {
-        ~UnmanagedResourceHolder()
+        ~NondisposableHolder()
         {
             StreamInUse.Dispose();
             Console.WriteLine("Destructor, released file stream.");

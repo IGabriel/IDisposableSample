@@ -42,8 +42,8 @@ namespace TestConsole
 
         private static void OpenFile_Destructor()
         {
-            UnmanagedResourceHolder obj = new UnmanagedResourceHolder();
-            obj.OpenFile();
+            NondisposableHolder obj = new NondisposableHolder();
+            obj.HoldResource();
             Console.WriteLine("End of test method.");
         }
         #endregion Destructor Sample
@@ -56,7 +56,7 @@ namespace TestConsole
 
             using (DisposableHolder obj = new DisposableHolder())
             {
-                obj.OpenFile();
+                obj.HoldResource();
                 Wait(tenSeconds);
                 Console.WriteLine("End of using statement.");
             }
@@ -76,7 +76,7 @@ namespace TestConsole
         private static void OpenFile_IDisposable()
         {
             DisposableHolder obj = new DisposableHolder();
-            obj.OpenFile();
+            obj.HoldResource();
             Console.WriteLine("End of test method.");
         }
         #endregion IDispose samples
