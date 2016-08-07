@@ -37,11 +37,14 @@ namespace IDisaposableObjects
         {
             if (!disposed)
             {
+                //Console.WriteLine("string is null? {0}", _stream == null);
                 if (disposing && _stream != null)
                 {
+                    Console.WriteLine("Clean up managed resource.");
                     _stream.Dispose();
                 }
 
+                Console.WriteLine("Clean up unmanaged resource.");
                 WindowsApi.CloseHandle(_handle);
                 _handle = IntPtr.Zero;
 

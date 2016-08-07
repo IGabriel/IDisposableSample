@@ -30,6 +30,8 @@ namespace TestConsole
             //OpenFileWithUnmanagedCodeWithUsing();
             //OpenFileWithUnmanagedCodeWithoutUsing();
 
+            //HybridTestWithUsing();
+            //HybridTestWithoutUsing();
 
             Console.WriteLine("End of the application");
         }
@@ -37,37 +39,37 @@ namespace TestConsole
         #region Managed sample
         private static void OpenFileWithManagedCodeWithUsing()
         {
-            OpenFileWithUsing(HolderType.Managed);
+            OpenFileWithUsing(HolderType.Managed, new string[] { TestFileName });
         }
 
         private static void OpenFileWithManagedCodeWithoutUsing()
         {
-            OpenFileWithoutUsing(HolderType.Managed);
+            OpenFileWithoutUsing(HolderType.Managed, new string[] { TestFileName });
         }
         #endregion Managed sample
 
         #region Unmanaged sample
         private static void OpenFileWithUnmanagedCodeWithUsing()
         {
-            OpenFileWithUsing(HolderType.Unmanaged);
+            OpenFileWithUsing(HolderType.Unmanaged, new string[] { TestFileName });
         }
 
         private static void OpenFileWithUnmanagedCodeWithoutUsing()
         {
-            OpenFileWithoutUsing(HolderType.Unmanaged);
+            OpenFileWithoutUsing(HolderType.Unmanaged, new string[] { TestFileName });
         }
         #endregion Unmanaged sample
 
         #region Test
         private static void MemoryTest()
         {
-            ApplyMemory();
+            AllocateMemory();
 
             CallGC();
             Wait(fiveSeconds);
         }
 
-        private static void ApplyMemory()
+        private static void AllocateMemory()
         {
             Console.WriteLine("Applying memory...");
 
@@ -88,23 +90,37 @@ namespace TestConsole
         {
             MonitorFileStatus(TestFileName);
 
-            HoldFile();
+            OpenFile();
 
             CallGC();
             Wait(fiveSeconds);
         }
 
-        private static void HoldFile()
+        private static void OpenFile()
         {
             FileStream stream  = File.Open(TestFileName, FileMode.Append, FileAccess.Write);
             Wait(fiveSeconds);
         }
         #endregion Test
 
-        #region helper
-        private static void OpenFileWithUsing(HolderType type)
+        #region Hybrid sample
+        private static void HybridTestWithUsing()
         {
-            MonitorFileStatus(TestFileName);
+            OpenFileWithUsing(HolderType.Hybrid,
+                new string[] { Hybrid1, Hybrid2 });
+        }
+
+        private static void HybridTestWithoutUsing()
+        {
+            OpenFileWithoutUsing(HolderType.Hybrid,
+                new string[] { Hybrid1, Hybrid2 });
+        }
+        #endregion Hybrid sample
+
+        #region helper
+        private static void OpenFileWithUsing(HolderType type, string[] files)
+        {
+            Array.ForEach(files, file => MonitorFileStatus(file));
             using (IFileHolder holder = CreateHolder(type))
             {
                 holder.OpenFile();
@@ -117,9 +133,9 @@ namespace TestConsole
             Wait(fiveSeconds);
         }
 
-        private static void OpenFileWithoutUsing(HolderType type)
+        private static void OpenFileWithoutUsing(HolderType type, string[] files)
         {
-            MonitorFileStatus(TestFileName);
+            Array.ForEach(files, file => MonitorFileStatus(file));
             OpenFile(type);
 
             Wait(fiveSeconds);
@@ -149,7 +165,7 @@ namespace TestConsole
                     holder = new HybridHolder(Hybrid1, Hybrid2);
                     break;
                 default:
-                    break;
+                    throw new NotSupportedException(string.Format("Not support type: {0}", type));
             }
             return holder;
         }
@@ -164,6 +180,9 @@ namespace TestConsole
         {
             Console.WriteLine("Call GC.Collect...");
             GC.Collect();
+
+            //For Hybrid, without using
+            //GC.Collect(0);
         }
 
         private static void MonitorFileStatus(string fileName)
@@ -175,8 +194,8 @@ namespace TestConsole
                 {
                     bool isInUse = IsFileInUse(fileName);
 
-                    string message = isInUse ? "File is in use." : "File is released.";
-                    Console.WriteLine(message);
+                    string messageFormat = isInUse ? "File {0} is in use." : "File {0} is released.";
+                    Console.WriteLine(messageFormat, fileName);
                     Thread.Sleep(oneSeconds);
                 }
             });
