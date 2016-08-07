@@ -49,13 +49,12 @@ namespace TestConsole
         #endregion Destructor Sample
 
         #region IDispose samples
-
         private static void OpenFileWithtUsing()
         {
             MonitorFileStatus();
             Wait(tenSeconds);
 
-            using (DisposableResourceHolder obj = new DisposableResourceHolder())
+            using (DisposableHolder obj = new DisposableHolder())
             {
                 obj.OpenFile();
                 Wait(tenSeconds);
@@ -76,7 +75,7 @@ namespace TestConsole
 
         private static void OpenFile_IDisposable()
         {
-            DisposableResourceHolder obj = new DisposableResourceHolder();
+            DisposableHolder obj = new DisposableHolder();
             obj.OpenFile();
             Console.WriteLine("End of test method.");
         }
@@ -91,13 +90,13 @@ namespace TestConsole
             CallGC();
             Wait(tenSeconds);
 
-            CallGC();
-            Wait(tenSeconds);
+            //CallGC();
+            //Wait(tenSeconds);
         }
 
         private static void ApplyManagedResource()
         {
-            ManagedResourceHolder obj = new ManagedResourceHolder();
+            BufferHolder obj = new BufferHolder();
             obj.ApplyResource();
             Console.WriteLine("End of test method.");
         }

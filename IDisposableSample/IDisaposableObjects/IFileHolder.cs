@@ -5,9 +5,7 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    class ConstValues
+    interface IFileHolder
     {
-        internal const int BlockSize = 1024 * 1024;
-        internal const int CycleTimes = 1024;
     }
 }

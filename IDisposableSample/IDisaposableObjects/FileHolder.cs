@@ -7,7 +7,7 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    public abstract class FileHolder
+    public abstract class FileHolder : IFileHolder
     {
         public readonly static string TestFileName = @"TestFile.txt";
 

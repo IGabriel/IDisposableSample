@@ -39,14 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConstValues.cs" />
     <Compile Include="HybridHolder.cs" />
+    <Compile Include="IBufferHolder.cs" />
+    <Compile Include="IFileHolder.cs" />
     <Compile Include="UnmanagedResourceHolder.cs" />
     <Compile Include="FileHolder.cs" />
-    <Compile Include="HybridPattern.cs" />
-    <Compile Include="DisposableResourceHolder.cs" />
-    <Compile Include="IDisposablePattern.cs" />
-    <Compile Include="ManagedResourceHolder.cs" />
+    <Compile Include="Pattern\HybridPattern.cs" />
+    <Compile Include="DisposableHolder.cs" />
+    <Compile Include="Pattern\IDisposablePattern.cs" />
+    <Compile Include="BufferHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
