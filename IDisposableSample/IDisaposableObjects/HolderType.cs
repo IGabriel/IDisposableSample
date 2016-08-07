@@ -5,10 +5,11 @@ using System.Text;
 
 namespace IDisaposableObjects
 {
-    interface IUnmanagedHolder
+    public enum HolderType
     {
-        void HoldResource();
-
-        bool IsResourceInUse();
+        None,
+        Managed,
+        Unmanaged,
+        Hybrid
     }
 }

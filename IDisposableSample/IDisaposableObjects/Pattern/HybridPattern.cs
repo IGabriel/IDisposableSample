@@ -8,7 +8,7 @@ namespace IDisaposableObjects
     // From StackOverflow: http://stackoverflow.com/questions/16601929/dispose-for-cleaning-up-managed-resources
     class HybridPattern : IDisposable
     {
-        private bool isDisposed = false;
+        private bool _disposed = false;
 
         ~HybridPattern()
         {
@@ -17,6 +17,7 @@ namespace IDisaposableObjects
 
         protected void Dispose(bool disposing)
         {
+
             if (disposing)
             {
                 // Code to dispose the managed resources of the class
@@ -27,7 +28,7 @@ namespace IDisaposableObjects
             // CloseHandle(handle);
             // handle = IntPtr.Zero;
 
-            isDisposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

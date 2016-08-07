@@ -39,21 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HybridHolder.cs" />
-    <Compile Include="IManagedHolder.cs" />
-    <Compile Include="IUnmanagedHolder.cs" />
-    <Compile Include="NondisposableHolder.cs" />
-    <Compile Include="FileHolder.cs" />
+    <Compile Include="HolderType.cs" />
+    <Compile Include="IFileHolder.cs" />
+    <Compile Include="IManagedFileHolder.cs" />
     <Compile Include="Pattern\HybridPattern.cs" />
-    <Compile Include="DisposableHolder.cs" />
     <Compile Include="Pattern\IDisposablePattern.cs" />
-    <Compile Include="BufferHolder.cs" />
+    <Compile Include="ManagedFileHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestFile.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Compile Include="UnmanagedFileHolder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

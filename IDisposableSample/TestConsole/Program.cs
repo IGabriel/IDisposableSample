@@ -11,98 +11,144 @@ namespace TestConsole
 {
     class Program
     {
+        private const string TestFileName = @"TestFile.txt";
+
         private static readonly TimeSpan oneSeconds = new TimeSpan(0, 0, 1);
-        private static readonly TimeSpan tenSeconds = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan fiveSeconds = new TimeSpan(0, 0, 5);
         private static readonly TimeSpan thritySecnods = new TimeSpan(0, 0, 30);
 
         static void Main(string[] args)
         {
-            OpenFileWithGC();
+            //MemoryTest();
+            //FileTest();
 
-            OpenFileWithtUsing();
-            OpenFileWithoutUsing();
+            //OpenFileWithManagedCodeWithUsing();
+            //OpenFileWithManagedCodeWithoutUsing();
 
-            ApplyManagedResourceWithGC();
-
+            //OpenFileWithUnmanagedCodeWithUsing();
+            //OpenFileWithUnmanagedCodeWithoutUsing();
 
 
             Console.WriteLine("End of the application");
         }
 
-        #region Destructor Sample
-        private static void OpenFileWithGC()
+        #region Managed sample
+        private static void OpenFileWithManagedCodeWithUsing()
         {
-            OpenFile_Destructor();
-            MonitorFileStatus();
+            OpenFileWithUsing(HolderType.Managed);
+        }
 
-            Wait(tenSeconds);
+        private static void OpenFileWithManagedCodeWithoutUsing()
+        {
+            OpenFileWithoutUsing(HolderType.Managed);
+        }
+        #endregion Managed sample
+
+        #region Unmanaged sample
+        private static void OpenFileWithUnmanagedCodeWithUsing()
+        {
+            OpenFileWithUsing(HolderType.Unmanaged);
+        }
+
+        private static void OpenFileWithUnmanagedCodeWithoutUsing()
+        {
+            OpenFileWithoutUsing(HolderType.Unmanaged);
+        }
+        #endregion Unmanaged sample
+
+        #region Test
+        private static void MemoryTest()
+        {
+            ApplyMemory();
+
             CallGC();
-            Wait(tenSeconds);
+            Wait(fiveSeconds);
         }
 
-        private static void OpenFile_Destructor()
+        private static void ApplyMemory()
         {
-            NondisposableHolder obj = new NondisposableHolder();
-            obj.HoldResource();
-            Console.WriteLine("End of test method.");
-        }
-        #endregion Destructor Sample
+            Console.WriteLine("Applying memory...");
 
-        #region IDispose samples
-        private static void OpenFileWithtUsing()
-        {
-            MonitorFileStatus();
-            Wait(tenSeconds);
+            const int size = 1024 * 1024 * 1024;
+            byte[] buffer = new byte[size];
 
-            using (DisposableHolder obj = new DisposableHolder())
-            {
-                obj.HoldResource();
-                Wait(tenSeconds);
-                Console.WriteLine("End of using statement.");
-            }
-            Wait(tenSeconds);
+            Random r = new Random();
+            r.NextBytes(buffer);
+
+            MemoryStream stream = new MemoryStream();
+            stream.Write(buffer, 0, size);
+
+            Console.WriteLine("Applied memory.");
+            Wait(fiveSeconds);
         }
 
-        private static void OpenFileWithoutUsing()
+        private static void FileTest()
         {
-            MonitorFileStatus();
-            OpenFile_IDisposable();
+            MonitorFileStatus(TestFileName);
 
-            Wait(tenSeconds);
+            HoldFile();
+
             CallGC();
-            Wait(tenSeconds);
+            Wait(fiveSeconds);
         }
 
-        private static void OpenFile_IDisposable()
+        private static void HoldFile()
         {
-            DisposableHolder obj = new DisposableHolder();
-            obj.HoldResource();
-            Console.WriteLine("End of test method.");
+            FileStream stream  = File.Open(TestFileName, FileMode.Append, FileAccess.Write);
+            Wait(fiveSeconds);
         }
-        #endregion IDispose samples
-
-        #region Pure managed resource sample
-        private static void ApplyManagedResourceWithGC()
-        {
-            ApplyManagedResource();
-
-            Wait(tenSeconds);
-            CallGC();
-            Wait(tenSeconds);
-
-            //CallGC();
-            //Wait(tenSeconds);
-        }
-
-        private static void ApplyManagedResource()
-        {
-            BufferHolder obj = new BufferHolder();
-            obj.ApplyResource();
-            Console.WriteLine("End of test method.");
-        }
-        #endregion Pure managed resource sample
+        #endregion Test
 
         #region helper
+        private static void OpenFileWithUsing(HolderType type)
+        {
+            MonitorFileStatus(TestFileName);
+            using (IFileHolder holder = CreateHolder(type))
+            {
+                holder.OpenFile();
+                Console.WriteLine("File is opened.");
+
+                Wait(fiveSeconds);
+            }
+
+            Console.WriteLine("Out of using statement.");
+            Wait(fiveSeconds);
+        }
+
+        private static void OpenFileWithoutUsing(HolderType type)
+        {
+            MonitorFileStatus(TestFileName);
+            OpenFile(type);
+
+            Wait(fiveSeconds);
+            CallGC();
+            Wait(fiveSeconds);
+        }
+
+        private static void OpenFile(HolderType type)
+        {
+            IFileHolder holder = CreateHolder(type);
+            holder.OpenFile();
+            Console.WriteLine("End of test method.");
+        }
+
+        private static IFileHolder CreateHolder(HolderType type)
+        {
+            IFileHolder holder = null;
+            switch(type)
+            {
+                case HolderType.Managed:
+                    holder = new ManagedFileHolder(TestFileName);
+                    break;
+                case HolderType.Unmanaged:
+                    holder = new UnmanagedFileHolder(TestFileName);
+                    break;
+                default:
+                    break;
+            }
+            return holder;
+        }
+
         private static void Wait(TimeSpan time)
         {
             Console.WriteLine("Wait for {0} seconds...", time.TotalSeconds);
@@ -115,20 +161,43 @@ namespace TestConsole
             GC.Collect();
         }
 
-        private static void MonitorFileStatus()
+        private static void MonitorFileStatus(string fileName)
         {
-            Console.WriteLine("Start to monitor file: {0}", FileHolder.TestFileName);
+            Console.WriteLine("Start to monitor file: {0}", fileName);
             Task.Factory.StartNew(() =>
             {
                 while(true)
                 {
-                    bool isInUse = FileHolder.IsFileInUse(FileHolder.TestFileName);
+                    bool isInUse = IsFileInUse(fileName);
 
                     string message = isInUse ? "File is in use." : "File is released.";
                     Console.WriteLine(message);
                     Thread.Sleep(oneSeconds);
                 }
             });
+        }
+
+
+        private static bool IsFileInUse(string fileName)
+        {
+            bool isInUse = true;
+            FileStream stream = null;
+            try
+            {
+                stream = File.Open(fileName, FileMode.Append, FileAccess.Write);
+                isInUse = false;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
+            }
+            return isInUse;
         }
         #endregion helper
     }
